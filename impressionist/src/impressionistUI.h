@@ -45,8 +45,8 @@ public:
 	Fl_Choice*			m_BrushTypeChoice;
 
 	Fl_Slider*			m_BrushSizeSlider;
-	//ÀK
-	//Šp“x‚Æƒ¿’l‚ÌƒXƒ‰ƒCƒ_[
+	//å®Ÿç¿’
+	//è§’åº¦ã¨Î±å€¤ã®ã‚¹ãƒ©ã‚¤ãƒ€ãƒ¼
 
 
 	Fl_Button*          m_ClearCanvasButton;
@@ -61,12 +61,12 @@ public:
 	// Interface to get attribute
 
 	int					getSize();
-	//ÀK
+	//å®Ÿç¿’
 
 
 
 	void				setSize(int size);
-	//ÀK
+	//å®Ÿç¿’
 
 	
 
@@ -85,7 +85,7 @@ private:
 
 	// All attributes here
 	int		m_nSize;
-	//ÀK
+	//å®Ÿç¿’
 
 
 	// These attributes are set by the filter kernel UI
@@ -112,11 +112,11 @@ private:
 	static void	cb_about(Fl_Menu_* o, void* v);
 	static void	cb_brushChoice(Fl_Widget* o, void* v);
 	static void	cb_clear_canvas_button(Fl_Widget* o, void* v);
-	static void cb_copy_image_to_canvas(Fl_Menu_* o, void* v);  //‚R‰ñ–ÚÀK@FilterKernel
+	static void cb_copy_image_to_canvas(Fl_Menu_* o, void* v);  //ï¼“å›ç›®å®Ÿç¿’ã€€FilterKernel
 	static void	cb_sizeSlides(Fl_Widget* o, void* v);
 
-	//ÀK
-	//Šp“x‚Æƒ¿’lƒR[ƒ‹ƒoƒbƒN
+	//å®Ÿç¿’
+	//è§’åº¦ã¨Î±å€¤ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
 };
 
 #endif

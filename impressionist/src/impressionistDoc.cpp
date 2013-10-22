@@ -15,7 +15,7 @@
 #include "impBrush.h"
 
 // Include individual brush headers here.
-//ƒuƒ‰ƒV’Ç‰Á
+//ãƒ–ãƒ©ã‚·è¿½åŠ 
 #include "pointBrush.h"
 
 
@@ -244,18 +244,18 @@ GLubyte* ImpressionistDoc::GetOriginalPixel( const Point p )
 
 
 
-//‚R‰ñ–ÚÀK@FilterKernel
+//ï¼“å›ç›®å®Ÿç¿’ã€€FilterKernel
 int ImpressionistDoc::copyImageToCanvas() {
      if ( m_ucPainting ) {
-          // ƒLƒƒƒ“ƒoƒX‚Ìƒoƒbƒtƒ@‚ğÄŠm•Û
+          // ã‚­ãƒ£ãƒ³ãƒã‚¹ã®ãƒãƒƒãƒ•ã‚¡ã‚’å†ç¢ºä¿
           delete [] m_ucPainting;
           m_nPaintWidth = m_nWidth;
           m_nPaintHeight = m_nHeight;
           m_ucPainting = new unsigned char [m_nPaintWidth*m_nPaintHeight*3];
 
-          // ’l‚ğƒRƒs[
+          // å€¤ã‚’ã‚³ãƒ”ãƒ¼
           memcpy( m_ucPainting, m_ucBitmap, m_nPaintWidth * m_nPaintHeight * 3 );
-          m_pUI->m_paintView->refresh();            // Ä•`‰æ
+          m_pUI->m_paintView->refresh();            // å†æç”»
      }
      return 0;
 }

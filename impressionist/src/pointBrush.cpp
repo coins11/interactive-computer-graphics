@@ -37,7 +37,7 @@ void PointBrush::BrushMove( const Point source, const Point target )
 	ImpressionistDoc* pDoc = GetDocument();
 	ImpressionistUI* dlg=pDoc->m_pUI;
 
-	//スライダーつけたあと
+	//繧ｹ繝ｩ繧､繝繝ｼ縺､縺代◆縺ゅ→
 
 	if ( pDoc == NULL ) {
 		printf( "PointBrush::BrushMove  document is NULL\n" );
