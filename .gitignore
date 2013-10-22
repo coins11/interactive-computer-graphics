@@ -1,0 +1,3 @@
+*.o
+*.omc
+.DS_Store

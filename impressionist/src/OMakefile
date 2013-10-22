@@ -1,0 +1,15 @@
+.PHONY: clean
+
+CXXFILES = $(filter %.cpp, $(set $(ls ./)))
+OBJECTS = $(addsuffix .o, $(removesuffix $(CXXFILES)))
+
+clean:
+	rm -r *.o $(PROGRAM)
+
+$(PROGRAM): $(OBJECTS)
+	$(CPP) -fpermissive -o $@ $(shell fltk-config --use-images --ldflags --use-gl) $+
+	
+%.o: %.cpp %.h
+	$(CPP) -fpermissive $(shell fltk-config --cxxflags) -c $<
+
+.DEFAULT: $(PROGRAM)

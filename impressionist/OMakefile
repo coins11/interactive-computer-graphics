@@ -1,0 +1,13 @@
+.PHONY: clean
+
+CPP = g++-4.8
+PROGRAM = impressionist
+
+$(PROGRAM): src/$(PROGRAM)
+	cp $< $@
+
+clean:
+	rm $(PROGRAM)
+
+.DEFAULT: $(PROGRAM)
+.SUBDIRS: src
