@@ -1,0 +1,14 @@
+.PHONY: clean
+
+CC  = gcc-4.8
+CPP = g++-4.8
+PROGRAMS = robotarm main
+
+$(PROGRAMS): % : $(addprefix src/, $(PROGRAMS))
+	cp $< $@
+
+clean:
+	rm $(PROGRAMS)
+
+.DEFAULT: $(PROGRAMS)
+.SUBDIRS: src
