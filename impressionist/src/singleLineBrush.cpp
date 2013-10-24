@@ -29,6 +29,7 @@ void SingleLineBrush::BrushMove( const Point source, const Point target )
 {
 	ImpressionistDoc* pDoc = GetDocument();
 	ImpressionistUI* dlg=pDoc->m_pUI;
+	int size = pDoc->getSize();
 
 	//スライダーつけたあと
 
@@ -40,8 +41,8 @@ void SingleLineBrush::BrushMove( const Point source, const Point target )
 	//SetColorAlpha( source, alpha );
 	SetColor( source );
 	glBegin(GL_LINE_STRIP);
-	glVertex2d( target.x - 10, target.y );
-	glVertex2d( target.x + 10, target.y );
+	glVertex2d( target.x - size, target.y );
+	glVertex2d( target.x + size, target.y );
 	glEnd();
 }
 
