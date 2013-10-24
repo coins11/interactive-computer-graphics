@@ -47,6 +47,7 @@ public:
 	Fl_Slider*			m_BrushSizeSlider;
 	//実習
 	//角度とα値のスライダー
+	Fl_Slider*			m_BrushAngleSlider;
 
 
 	Fl_Button*          m_ClearCanvasButton;
@@ -62,11 +63,12 @@ public:
 
 	int					getSize();
 	//実習
-
+	int					getAngle();
 
 
 	void				setSize(int size);
 	//実習
+	void				setAngle(int angle);
 
 	
 
@@ -86,6 +88,7 @@ private:
 	// All attributes here
 	int		m_nSize;
 	//実習
+	int		m_nAngle;
 
 
 	// These attributes are set by the filter kernel UI
@@ -117,6 +120,7 @@ private:
 
 	//実習
 	//角度とα値コールバック
+	static void cb_angleSlides(Fl_Widget* o, void* v);
 };
 
 #endif

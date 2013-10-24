@@ -1,12 +1,18 @@
-#ifndef SINGLELINEBRUSH_H
-#define SINGLELINEBRUSH_H
+//
+// pointBrush.h
+//
+// The header file for Point Brush. 
+//
+
+#ifndef LINEBRUSH_H
+#define LINEBRUSH_H
 
 #include "impBrush.h"
 
-class SingleLineBrush : public ImpBrush
+class LineBrush : public ImpBrush
 {
 public:
-	SingleLineBrush( ImpressionistDoc* pDoc = NULL, char* name = NULL );
+	LineBrush( ImpressionistDoc* pDoc = NULL, char* name = NULL );
 
 	void BrushBegin( const Point source, const Point target );
 	void BrushMove( const Point source, const Point target );

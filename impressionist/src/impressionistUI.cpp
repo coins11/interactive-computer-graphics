@@ -284,6 +284,10 @@ void ImpressionistUI::cb_sizeSlides(Fl_Widget* o, void* v)
 }
 
 //実習
+void ImpressionistUI::cb_angleSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nAngle = int( ((Fl_Slider *)o)->value() ) ;
+}
 
 
 //---------------------------------- per instance functions --------------------------------------
@@ -337,6 +341,21 @@ int ImpressionistUI::getSize()
 //------------------------------------------------
 // Return the brush angle
 //------------------------------------------------
+int ImpressionistUI::getAngle()
+{
+	return m_nAngle;
+}
+
+//-------------------------------------------------
+// Set the brush angle
+//-------------------------------------------------
+void ImpressionistUI::setAngle( int angle )
+{
+	m_nAngle = angle;
+
+	if (angle<=360) 
+		m_BrushAngleSlider->value(m_nAngle);
+}
 
 
 //------------------------------------------------
@@ -355,10 +374,6 @@ void ImpressionistUI::setSize( int size )
 	if (size<=40) 
 		m_BrushSizeSlider->value(m_nSize);
 }
-
-
-
-
 
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
@@ -386,7 +401,7 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE+1] = {
   {"Points",			FL_ALT+'p', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_POINTS},
   {"Triangle",			FL_ALT+'t', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_TRIANGLE},
   {"Circle",			FL_ALT+'c', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_CIRCLE},
-  {"Single Line",		FL_ALT+'s', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SINGLE_LINE},
+  {"Line",				FL_ALT+'l', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_LINE},
   //ブラシ追加
   {0}
 };
@@ -437,6 +452,7 @@ ImpressionistUI::ImpressionistUI() {
 
 	m_nSize = 10;
 	//実習
+	m_nAngle=0;				// スライダー初期値
 
 
 	// brush dialog definition
@@ -467,7 +483,14 @@ ImpressionistUI::ImpressionistUI() {
 
 		//実習
 		//傾きスライダー
-
+		m_BrushAngleSlider = new Fl_Value_Slider(10, 120, 300, 20, "Angle");  // スライダー
+		m_BrushAngleSlider->user_data((void*)(this));
+		m_BrushAngleSlider->type(FL_HOR_NICE_SLIDER);
+		m_BrushAngleSlider->labelfont(FL_COURIER);
+		m_BrushAngleSlider->labelsize(12);
+		m_BrushAngleSlider->minimum(0);		// スライダー最小値
+		m_BrushAngleSlider->maximum(360);
+		m_BrushAngleSlider->callback(cb_angleSlides);
 
 		//α値スライダー
 
