@@ -14,6 +14,9 @@
 enum
 {
 	BRUSH_POINTS = 0,
+	BRUSH_TRIANGLE,
+	BRUSH_CIRCLE,
+	BRUSH_SINGLE_LINE,
 	NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 
