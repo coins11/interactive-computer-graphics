@@ -18,8 +18,8 @@
 //ブラシ追加
 #include "pointBrush.h"
 #include "triangleBrush.h"
-#include "singleLineBrush.h"
 #include "circleBrush.h"
+#include "lineBrush.h"
 
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
 
@@ -41,7 +41,7 @@ ImpressionistDoc::ImpressionistDoc()
 	ImpBrush::c_pBrushes[BRUSH_POINTS]	    = new PointBrush( this, "Points" );
 	ImpBrush::c_pBrushes[BRUSH_TRIANGLE]	= new TriangleBrush( this, "Triangle" );
 	ImpBrush::c_pBrushes[BRUSH_CIRCLE]	    = new CircleBrush( this, "Circle" );
-	ImpBrush::c_pBrushes[BRUSH_SINGLE_LINE] = new SingleLineBrush( this, "Single Line");
+	ImpBrush::c_pBrushes[BRUSH_LINE]		= new LineBrush( this, "Line");
 	// Note: You should implement these 5 brushes.  They are set the same (PointBrush) for now
 
 	// make one of the brushes current
@@ -81,6 +81,14 @@ void ImpressionistDoc::setBrushType(int type)
 int ImpressionistDoc::getSize()
 {
 	return m_pUI->getSize();
+}
+
+//---------------------------------------------------------
+// Returns the angle of the brush.
+//---------------------------------------------------------
+int ImpressionistDoc::getAngle()
+{
+	return m_pUI->getAngle();
 }
 
 
