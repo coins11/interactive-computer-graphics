@@ -289,6 +289,10 @@ void ImpressionistUI::cb_angleSlides(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_nAngle = int( ((Fl_Slider *)o)->value() ) ;
 }
 
+void ImpressionistUI::cb_alphaSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nAlpha = float( ((Fl_Slider *)o)->value() ) ;
+}
 
 //---------------------------------- per instance functions --------------------------------------
 
@@ -346,6 +350,14 @@ int ImpressionistUI::getAngle()
 	return m_nAngle;
 }
 
+//------------------------------------------------
+// Return the alpha value
+//------------------------------------------------
+float ImpressionistUI::getAlpha()
+{
+	return m_nAlpha;
+}
+
 //-------------------------------------------------
 // Set the brush angle
 //-------------------------------------------------
@@ -358,12 +370,6 @@ void ImpressionistUI::setAngle( int angle )
 }
 
 
-//------------------------------------------------
-// Return the alpha value
-//------------------------------------------------
-
-
-
 //-------------------------------------------------
 // Set the brush size
 //-------------------------------------------------
@@ -372,6 +378,17 @@ void ImpressionistUI::setSize( int size )
 	m_nSize=size;
 
 	if (size<=40) 
+		m_BrushSizeSlider->value(m_nSize);
+}
+
+//-------------------------------------------------
+// Set the brush alpha
+//-------------------------------------------------
+void ImpressionistUI::setAlpha( float alpha )
+{
+	m_nAlpha = alpha;
+
+	if (alpha<=1) 
 		m_BrushSizeSlider->value(m_nSize);
 }
 
@@ -496,6 +513,14 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushAngleSlider->callback(cb_angleSlides);
 
 		//α値スライダー
+		m_BrushAlphaSlider = new Fl_Value_Slider(10, 160, 300, 20, "Alpha");  // スライダー
+		m_BrushAlphaSlider->user_data((void*)(this));
+		m_BrushAlphaSlider->type(FL_HOR_NICE_SLIDER);
+		m_BrushAlphaSlider->labelfont(FL_COURIER);
+		m_BrushAlphaSlider->labelsize(12);
+		m_BrushAlphaSlider->minimum(0);		// スライダー最小値
+		m_BrushAlphaSlider->maximum(1);
+		m_BrushAlphaSlider->callback(cb_alphaSlides);
 
 
 		m_brushDialog->end();	

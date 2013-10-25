@@ -31,6 +31,7 @@ void TriangleBrush::BrushMove( const Point source, const Point target )
 	ImpressionistDoc* pDoc = GetDocument();
 	ImpressionistUI* dlg=pDoc->m_pUI;
 	int size = pDoc->getSize();
+	float alpha = pDoc->getAlpha();
 
 	//スライダーつけたあと
 
@@ -46,9 +47,8 @@ void TriangleBrush::BrushMove( const Point source, const Point target )
 	By = target.y - (.5 * size);
 	Cy = target.y + (.5 * size);
 
-	//SetColorAlpha( source, alpha );
+	SetColorAlpha( source, alpha );
 	glBegin(GL_POLYGON);
-	SetColor( source );
 	glVertex2i( Ax, Ay );
 	glVertex2i( Bx, By );
 	glVertex2i( Cx, Cy );

@@ -37,6 +37,7 @@ void ScatteredPointBrush::BrushMove( const Point source, const Point target )
 	ImpressionistDoc* pDoc = GetDocument();
 	ImpressionistUI* dlg=pDoc->m_pUI;
 	int size=pDoc->getSize();
+	float alpha=pDoc->getAlpha();
 	int Ax,Ay;
 
 	//スライダーつけたあと
@@ -45,10 +46,9 @@ void ScatteredPointBrush::BrushMove( const Point source, const Point target )
 		return;
 	}
 
-	//SetColorAlpha( source, alpha );
+	SetColorAlpha( source, alpha );
 	glPointSize(1.0);
 	glBegin( GL_POINTS );
-	SetColor( source );
 	for(int i=0; i<10; i++){
 		Ax=target.x-size/2+rand()%size;
 		Ay=target.y-size/2+rand()%size;

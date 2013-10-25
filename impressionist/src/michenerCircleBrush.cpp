@@ -37,6 +37,7 @@ void MichenerCircleBrush::BrushMove( const Point source, const Point target )
 	ImpressionistDoc* pDoc = GetDocument();
 	ImpressionistUI* dlg=pDoc->m_pUI;
 	int size = pDoc->getSize();
+	float alpha = pDoc->getAlpha();
 
 	//スライダーつけたあと
 
@@ -45,8 +46,7 @@ void MichenerCircleBrush::BrushMove( const Point source, const Point target )
 		return;
 	}
 
-	//SetColorAlpha( source, alpha );
-	SetColor( source );
+	SetColorAlpha( source, alpha );
 	glBegin( GL_POINTS );
 	Circle(target.x, target.y, size / 2);
 	glEnd();
