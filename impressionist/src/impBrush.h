@@ -18,6 +18,7 @@ enum
 	BRUSH_CIRCLE,
 	BRUSH_LINE,
 	BRUSH_SCATTEREDPOINT,
+	BRUSH_MICHENERCIRCLE,
 	NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 
