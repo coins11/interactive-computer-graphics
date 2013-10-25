@@ -38,11 +38,11 @@ void CircleBrush::BrushMove( const Point source, const Point target )
 	ImpressionistDoc* pDoc = GetDocument();
 	ImpressionistUI* dlg=pDoc->m_pUI;
 	int size=pDoc->getSize();
+	float alpha = pDoc->getAlpha();
 	int div=12;
 	float radius=size/2.0;
 	float Ax,Ay;
 	const double PI = 3.141592653589793238462;
-
 
 	//スライダーつけたあと
 
@@ -53,7 +53,7 @@ void CircleBrush::BrushMove( const Point source, const Point target )
 
 	//SetColorAlpha( source, alpha );
 	glBegin(GL_POLYGON);
-	SetColor( source );
+	SetColorAlpha( source, alpha );
 	for(int i=0;i<div;i++){
 		Ax=target.x+radius*cos(2*PI*i/div);
 		Ay=target.y+radius*sin(2*PI*i/div);

@@ -289,6 +289,10 @@ void ImpressionistUI::cb_angleSlides(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_nAngle = int( ((Fl_Slider *)o)->value() ) ;
 }
 
+void ImpressionistUI::cb_alphaSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nAlpha = float( ((Fl_Slider *)o)->value() ) ;
+}
 
 //---------------------------------- per instance functions --------------------------------------
 
@@ -346,6 +350,14 @@ int ImpressionistUI::getAngle()
 	return m_nAngle;
 }
 
+//------------------------------------------------
+// Return the alpha value
+//------------------------------------------------
+float ImpressionistUI::getAlpha()
+{
+	return m_nAlpha;
+}
+
 //-------------------------------------------------
 // Set the brush angle
 //-------------------------------------------------
@@ -356,12 +368,6 @@ void ImpressionistUI::setAngle( int angle )
 	if (angle<=360) 
 		m_BrushAngleSlider->value(m_nAngle);
 }
-
-
-//------------------------------------------------
-// Return the alpha value
-//------------------------------------------------
-
 
 
 //-------------------------------------------------
@@ -375,6 +381,17 @@ void ImpressionistUI::setSize( int size )
 		m_BrushSizeSlider->value(m_nSize);
 }
 
+//-------------------------------------------------
+// Set the brush alpha
+//-------------------------------------------------
+void ImpressionistUI::setAlpha( float alpha )
+{
+	m_nAlpha = alpha;
+
+	if (alpha<=1) 
+		m_BrushSizeSlider->value(m_nSize);
+}
+
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	
@@ -384,6 +401,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&Brushes...",	FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes },
 	{ "&Copy Original Image to Canvas", FL_CTRL + 'v', (Fl_Callback *)ImpressionistUI::cb_copy_image_to_canvas },
 	{ "&Clear Canvas", FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER },
+	{ "&Filter Kernel...", FL_CTRL + 'f', (Fl_Callback *)ImpressionistUI::cb_filter_kernel},
 	//Filter Kernel実習
 	
 	{ "&Quit",			FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit },
@@ -495,6 +513,14 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushAngleSlider->callback(cb_angleSlides);
 
 		//α値スライダー
+		m_BrushAlphaSlider = new Fl_Value_Slider(10, 160, 300, 20, "Alpha");  // スライダー
+		m_BrushAlphaSlider->user_data((void*)(this));
+		m_BrushAlphaSlider->type(FL_HOR_NICE_SLIDER);
+		m_BrushAlphaSlider->labelfont(FL_COURIER);
+		m_BrushAlphaSlider->labelsize(12);
+		m_BrushAlphaSlider->minimum(0);		// スライダー最小値
+		m_BrushAlphaSlider->maximum(1);
+		m_BrushAlphaSlider->callback(cb_alphaSlides);
 
 
 		m_brushDialog->end();	

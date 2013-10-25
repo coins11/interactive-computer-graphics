@@ -39,6 +39,7 @@ void LineBrush::BrushMove( const Point source, const Point target )
 	ImpressionistUI* dlg=pDoc->m_pUI;
 	int size=pDoc->getSize();
 	int angle=pDoc->getAngle();	// 傾き（Angle）を取得
+	float alpha=pDoc->getAlpha();
 	float Ax,Ay,Bx,By;
 	const double PI = 3.141592653589793238462;
 
@@ -56,7 +57,7 @@ void LineBrush::BrushMove( const Point source, const Point target )
 	By=target.y-size*sin(PI*angle/180);
 
 	glBegin(GL_LINES);		// 線を描画
-		SetColor( source );
+		SetColorAlpha( source, alpha );
 		glVertex2f(Ax,Ay);
 		glVertex2f(Bx,By);
 	glEnd();

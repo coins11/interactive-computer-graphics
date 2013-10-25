@@ -38,6 +38,7 @@ public:
 	//実習
 	int		getAngle();
 
+	float	getAlpha();
 
 	// get the UI angle
 	void	setSize(int size);		// set the UI size
