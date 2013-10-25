@@ -1,3 +1,6 @@
 *.o
 *.omc
 .DS_Store
+impressionist/impressionist
+impressionist/src/impressionist
+
