@@ -39,7 +39,7 @@ void CircleBrush::BrushMove( const Point source, const Point target )
 	ImpressionistUI* dlg=pDoc->m_pUI;
 	int size=pDoc->getSize();
 	float alpha = pDoc->getAlpha();
-	int div=12;
+	int div=36;
 	float radius=size/2.0;
 	float Ax,Ay;
 	const double PI = 3.141592653589793238462;
