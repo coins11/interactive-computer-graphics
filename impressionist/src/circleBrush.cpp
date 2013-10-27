@@ -36,6 +36,11 @@ void CircleBrush::BrushBegin( const Point source, const Point target )
 void CircleBrush::BrushMove( const Point source, const Point target )
 {
 	ImpressionistDoc* pDoc = GetDocument();
+	if ( pDoc == NULL ) {
+		printf( "CircleBrush::BrushMove  document is NULL\n" );
+		return;
+	}
+
 	ImpressionistUI* dlg=pDoc->m_pUI;
 	int size=pDoc->getSize();
 	float alpha = pDoc->getAlpha();
@@ -44,14 +49,6 @@ void CircleBrush::BrushMove( const Point source, const Point target )
 	float Ax,Ay;
 	const double PI = 3.141592653589793238462;
 
-	//スライダーつけたあと
-
-	if ( pDoc == NULL ) {
-		printf( "CircleBrush::BrushMove  document is NULL\n" );
-		return;
-	}
-
-	//SetColorAlpha( source, alpha );
 	glBegin(GL_POLYGON);
 	SetColorAlpha( source, alpha );
 	for(int i=0;i<div;i++){

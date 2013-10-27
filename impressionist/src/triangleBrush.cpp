@@ -27,25 +27,22 @@ void TriangleBrush::BrushBegin( const Point source, const Point target )
 
 void TriangleBrush::BrushMove( const Point source, const Point target )
 {
-	int Ax,Ay,Bx,By,Cx,Cy;
 	ImpressionistDoc* pDoc = GetDocument();
-	ImpressionistUI* dlg=pDoc->m_pUI;
-	int size = pDoc->getSize();
-	float alpha = pDoc->getAlpha();
-
-	//スライダーつけたあと
-
 	if ( pDoc == NULL ) {
 		printf( "TriangleBrush::BrushMove  document is NULL\n" );
 		return;
 	}
 
-	Ax = target.x - (.5 * size);
-	Bx = target.x + (.5 * size);
-	Cx = target.x;
-	Ay = target.y - (.5 * size);
-	By = target.y - (.5 * size);
-	Cy = target.y + (.5 * size);
+	ImpressionistUI* dlg=pDoc->m_pUI;
+	int size = pDoc->getSize();
+	float alpha = pDoc->getAlpha();
+
+	int Ax = target.x - (.5 * size);
+	int Bx = target.x + (.5 * size);
+	int Cx = target.x;
+	int Ay = target.y - (.5 * size);
+	int By = target.y - (.5 * size);
+	int Cy = target.y + (.5 * size);
 
 	SetColorAlpha( source, alpha );
 	glBegin(GL_POLYGON);

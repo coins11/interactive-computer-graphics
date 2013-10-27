@@ -35,16 +35,14 @@ void MichenerCircleBrush::BrushBegin( const Point source, const Point target )
 void MichenerCircleBrush::BrushMove( const Point source, const Point target )
 {
 	ImpressionistDoc* pDoc = GetDocument();
-	ImpressionistUI* dlg=pDoc->m_pUI;
-	int size = pDoc->getSize();
-	float alpha = pDoc->getAlpha();
-
-	//スライダーつけたあと
-
 	if ( pDoc == NULL ) {
 		printf( "MichenerCircleBrush::BrushMove  document is NULL\n" );
 		return;
 	}
+
+	ImpressionistUI* dlg=pDoc->m_pUI;
+	int size = pDoc->getSize();
+	float alpha = pDoc->getAlpha();
 
 	SetColorAlpha( source, alpha );
 	glBegin( GL_POINTS );

@@ -36,6 +36,11 @@ void LineBrush::BrushBegin( const Point source, const Point target )
 void LineBrush::BrushMove( const Point source, const Point target )
 {
 	ImpressionistDoc* pDoc = GetDocument();
+	if ( pDoc == NULL ) {
+		printf( "LineBrush::BrushMove  document is NULL\n" );
+		return;
+	}
+
 	ImpressionistUI* dlg=pDoc->m_pUI;
 	int size=pDoc->getSize();
 	int angle=pDoc->getAngle();	// 傾き（Angle）を取得
@@ -43,23 +48,15 @@ void LineBrush::BrushMove( const Point source, const Point target )
 	float Ax,Ay,Bx,By;
 	const double PI = 3.141592653589793238462;
 
-	//スライダーつけたあと
-
-	if ( pDoc == NULL ) {
-		printf( "LineBrush::BrushMove  document is NULL\n" );
-		return;
-	}
-
-	//SetColorAlpha( source, alpha );
 	Ax=target.x+size*cos(PI*angle/180);
 	Ay=target.y+size*sin(PI*angle/180);
 	Bx=target.x-size*cos(PI*angle/180);
 	By=target.y-size*sin(PI*angle/180);
 
 	glBegin(GL_LINES);		// 線を描画
-		SetColorAlpha( source, alpha );
-		glVertex2f(Ax,Ay);
-		glVertex2f(Bx,By);
+	SetColorAlpha( source, alpha );
+	glVertex2f(Ax,Ay);
+	glVertex2f(Bx,By);
 	glEnd();
 }
 

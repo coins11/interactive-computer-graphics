@@ -35,16 +35,15 @@ void ScatteredPointBrush::BrushBegin( const Point source, const Point target )
 void ScatteredPointBrush::BrushMove( const Point source, const Point target )
 {
 	ImpressionistDoc* pDoc = GetDocument();
-	ImpressionistUI* dlg=pDoc->m_pUI;
-	int size=pDoc->getSize();
-	float alpha=pDoc->getAlpha();
-	int Ax,Ay;
-
-	//スライダーつけたあと
 	if ( pDoc == NULL ) {
 		printf( "ScatteredPointBrush::BrushMove  document is NULL\n" );
 		return;
 	}
+	
+	ImpressionistUI* dlg=pDoc->m_pUI;
+	int size=pDoc->getSize();
+	float alpha=pDoc->getAlpha();
+	int Ax,Ay;
 
 	SetColorAlpha( source, alpha );
 	glPointSize(1.0);

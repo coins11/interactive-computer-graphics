@@ -36,18 +36,15 @@ void ScatteredCircleBrush::BrushBegin( const Point source, const Point target )
 void ScatteredCircleBrush::BrushMove( const Point source, const Point target )
 {
 	ImpressionistDoc* pDoc = GetDocument();
-	ImpressionistUI* dlg=pDoc->m_pUI;
-	int size = pDoc->getSize();
-	float alpha = pDoc->getAlpha();
-	float Ax,Ay;
-
-
-	//スライダーつけたあと
-
 	if ( pDoc == NULL ) {
 		printf( "ScatteredCircleBrush::BrushMove  document is NULL\n" );
 		return;
 	}
+
+	ImpressionistUI* dlg=pDoc->m_pUI;
+	int size = pDoc->getSize();
+	float alpha = pDoc->getAlpha();
+	float Ax,Ay;
 
 	SetColorAlpha( source, alpha );
 	for(int i=0; i<10; i++){
