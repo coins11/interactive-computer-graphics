@@ -4,7 +4,10 @@ CC  = gcc-4.8
 CPP = g++-4.8
 PROGRAMS = robotarm main
 
-$(PROGRAMS): % : $(addprefix src/, $(PROGRAMS))
+main: src/main
+	cp $< $@
+
+robotarm: src/robotarm
 	cp $< $@
 
 clean:
