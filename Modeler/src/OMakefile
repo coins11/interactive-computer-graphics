@@ -2,6 +2,7 @@
 
 CXXFILES = $(filter %.cpp %.cxx %.c, $(set $(ls ./)))
 OBJECTS  = $(addsuffix .o, $(removesuffix $(CXXFILES)))
+HEADERS  = $(filter %.h, $(set $(ls ./)))
 
 lib(p) =
 	return $(filter-out $(addsuffix .o, $(filter-out $p, $(PROGRAMS))), $(OBJECTS))
@@ -9,7 +10,7 @@ lib(p) =
 clean:
 	rm -r *.o $(PROGRAMS)
 
-$(PROGRAMS): % : $(OBJECTS)
+$(PROGRAMS): % : $(OBJECTS) $(HEADERS)
 	$(CPP) -fpermissive -o $@ $(shell fltk-config --use-images --ldflags --use-gl) -L/opt/X11/lib -lX11 $(lib $@)
 	
 %.o: %.cpp
