@@ -1,25 +1,29 @@
 .PHONY: clean
 
-CXXFILES = $(filter %.cpp %.cxx %.c, $(set $(ls ./)))
+CXXFILES = $(filter %.cpp %.c, $(set $(ls ./)))
 OBJECTS  = $(addsuffix .o, $(removesuffix $(CXXFILES)))
 HEADERS  = $(filter %.h, $(set $(ls ./)))
 
 lib(p) =
 	return $(filter-out $(addsuffix .o, $(filter-out $p, $(PROGRAMS))), $(OBJECTS))
 
+.SCANNER: scan-all-%.cpp: %.cpp
+    $(CPP) -MM $(shell fltk-config --cxxflags) $<
+
+.SCANNER: scan-all-%.c: %.c
+    $(CC) -MM $(shell fltk-config --cxxflags) $<
+
 clean:
 	rm -r *.o $(PROGRAMS)
 
-$(PROGRAMS): % : $(OBJECTS) $(HEADERS)
+$(PROGRAMS): % : $(OBJECTS)
 	$(CPP) -fpermissive -o $@ $(shell fltk-config --use-images --ldflags --use-gl) -L/opt/X11/lib -lX11 $(lib $@)
-	
-%.o: %.cpp
+
+%.o: %.cpp :scanner: scan-all-%.cpp
 	$(CPP) -fpermissive $(shell fltk-config --cxxflags) -I/opt/X11/include -c $<
 
-%.o: %.cxx
-	$(CPP) -fpermissive $(shell fltk-config --cxxflags) -I/opt/X11/include -c $<
-
-%.o: %.c
+%.o: %.c :scanner: scan-all-%.c
 	$(CC) $(shell fltk-config --cxxflags) -c $<
+
 
 .DEFAULT: $(PROGRAMS)
