@@ -207,6 +207,62 @@ static void drawRevolution(double (*curve)(double))
 	delete[] ps;
 }
 
+static void drawRevolution(int n, float c[][2])
+{
+	int i,j;
+
+	// o—Í‚·‚éƒ‚ƒfƒ‹‚ÌŠî–{î•ñ
+	int div_phi = 100;
+
+  // •Ï‰»‚³‚¹‚éƒpƒ‰ƒ[ƒ^
+  double phi;
+  double dphi = 2*M_PI/div_phi;
+
+  // À•W‚ÌŒvZ
+  Vec3d *ps = new Vec3d[div_phi * (n+1)];
+  int k = 0;
+  for(i=0; i < n; i++) {
+    for(j=0, phi=0; j < div_phi; j++, phi+=dphi) {
+      double x = (c[i][0]) * sin(phi) * 0.1;
+      double y = (c[i][0]) * cos(phi) * 0.1;
+      double z = (c[i][1]) * 0.1;
+      //fprintf(fout, "v %f %f %f\n", x, -z, y);
+      ps[k++] = Vec3d(x,-z,y);
+    }
+  }
+
+  // –Ê‚ÌŒvZ
+  for(i=0; i < n; i++) {
+    for(j=0; j < div_phi; j++) {
+      int v0 = i*div_phi + j;
+      int v1 = (i+1)*div_phi + j;
+      int v2 = (i+1)*div_phi + (j+1)%div_phi;
+      //fprintf(fout, "f %d %d %d\n", v0+1, v1+1, v2+1);
+      drawTriangle(ps[v0], ps[v1], ps[v2]);
+
+      //v0 = v0;
+      v1 = v2;
+      v2 = i*div_phi + (j+1)%div_phi;
+      //fprintf(fout, "f %d %d %d\n", v0+1, v1+1, v2+1);
+      drawTriangle(ps[v0], ps[v1], ps[v2]);
+    }
+  }
+
+	delete[] ps;
+}
+
+static void drawPondeRing(double R)
+{
+  double dr = M_PI / 4;
+  for(int i = 0; i < 8; ++i)
+  {
+    glPushMatrix();
+      glTranslated(R * sin(i * dr), R * cos(i * dr), 0);
+      drawSphere(1);
+    glPopMatrix();
+  }
+}
+
 double curve_body(double z)
 {
 	return abs(sin(z * M_PI * 2)) + pow(sin(z * M_PI), 2);
@@ -224,71 +280,71 @@ double curve_head(double z)
 
 // ModelƒNƒ‰ƒX‚Ì’è‹`iModelerViewƒNƒ‰ƒX‚ğŒp³j
 class Model : public ModelerView {
-private:
+  private:
     //```````````````````````````````````
-	//‘æ3T‰Û‘è
+    //‘æ3T‰Û‘è
     //---------------------------------------------------------------------
 
-	// ƒtƒŒ[ƒ€”Ô†
+    // ƒtƒŒ[ƒ€”Ô†
     int frame_count;
 
     //-------------------------------------------------------------------------
     // §Œä•Ï”
     //-------------------------------------------------------------------------
 
-        // ```•Ï”‚ğ’Ç‰Á```
-	Vec3d center;
-	Vec3d head;
+    // ```•Ï”‚ğ’Ç‰Á```
+    Vec3d center;
+    Vec3d head;
 
     //```````````````````````````````````
 
-public:
+  public:
     // ƒRƒ“ƒXƒgƒ‰ƒNƒ^iƒX[ƒp[ƒNƒ‰ƒX‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğŒÄ‚Ño‚·j
     Model( int x, int y, int w, int h, char* label ) : ModelerView( x, y, w, h, label )
-    {
-        //```````````````````````````````````
-		//‘æ3T‰Û‘è
-        //---------------------------------------------------------------------
+  {
+    //```````````````````````````````````
+    //‘æ3T‰Û‘è
+    //---------------------------------------------------------------------
 
-        // ƒtƒŒ[ƒ€”Ô†‚Ì‰Šú‰»
-        frame_count = 0;
+    // ƒtƒŒ[ƒ€”Ô†‚Ì‰Šú‰»
+    frame_count = 0;
 
-        //---------------------------------------------------------------------
-        // ‰Šú‰»
-        //---------------------------------------------------------------------
+    //---------------------------------------------------------------------
+    // ‰Šú‰»
+    //---------------------------------------------------------------------
 
-            // ```•Ï”‚ğ‰Šú‰»```
-		head = Vec3d(10, -10, 10);
-
-		//```````````````````````````````````
-    }
+    // ```•Ï”‚ğ‰Šú‰»```
+    head = Vec3d(10, -10, 10);
 
     //```````````````````````````````````
-	//‘æ3T‰Û‘è
-	//---------------------------------------------------------------------
+  }
+
+    //```````````````````````````````````
+    //‘æ3T‰Û‘è
+    //---------------------------------------------------------------------
 
     // ©“®ƒAƒjƒ[ƒVƒ‡ƒ“‚Ìİ’è
     void SetAutomaticAnimation()
     {
-        //-----------------------------------------------------------------
-        // ƒAƒjƒ[ƒVƒ‡ƒ“
-        //-----------------------------------------------------------------
+      //-----------------------------------------------------------------
+      // ƒAƒjƒ[ƒVƒ‡ƒ“
+      //-----------------------------------------------------------------
 
-            // ```ƒvƒƒOƒ‰ƒ€‚ğ‹Lq```
+      // ```ƒvƒƒOƒ‰ƒ€‚ğ‹Lq```
 
-        //-----------------------------------------------------------------
+      //-----------------------------------------------------------------
     }
 
-	// è“®ƒAƒjƒ[ƒVƒ‡ƒ“‚Ìİ’è
+    // è“®ƒAƒjƒ[ƒVƒ‡ƒ“‚Ìİ’è
     void SetManualAnimation()
     {
-        //-----------------------------------------------------------------
-        // ƒAƒjƒ[ƒVƒ‡ƒ“
-        //-----------------------------------------------------------------
+      //-----------------------------------------------------------------
+      // ƒAƒjƒ[ƒVƒ‡ƒ“
+      //-----------------------------------------------------------------
 
-            // ```ƒvƒƒOƒ‰ƒ€‚ğ‹Lq```
+      // ```ƒvƒƒOƒ‰ƒ€‚ğ‹Lq```
 
-		//-----------------------------------------------------------------
+      //-----------------------------------------------------------------
     }
 
     //```````````````````````````````````
@@ -296,142 +352,211 @@ public:
     // •`‰æ‚Ì‘Oˆ—
     void BeginPaint()
     {
-        // ”¼“§–¾ˆ—‚ğ—LŒø‰»
-        glEnable( GL_BLEND );
-        // ¬‡•û–@‚Ìw’è
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+      // ”¼“§–¾ˆ—‚ğ—LŒø‰»
+      glEnable( GL_BLEND );
+      // ¬‡•û–@‚Ìw’è
+      glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     }
 
     // •`‰æ‚ÌŒãˆ—
     void EndPaint()
     {
-        // ”¼“§–¾ˆ—‚ğ–³Œø‰»
-        glDisable( GL_BLEND );
+      // ”¼“§–¾ˆ—‚ğ–³Œø‰»
+      glDisable( GL_BLEND );
     }
 
-	void drawHead()
-	{
-		double R = 2.3;
-		double dr = M_PI / 4;
-		glPushMatrix();
+    void drawLionHead()
+    {
+      glPushMatrix();
 
-			// ‚½‚Ä‚ª‚İ
-			for(int i = 0; i < 8; ++i)
-			{
-				glPushMatrix();
-					glTranslated(R * sin(i * dr), R * cos(i * dr), 0);
-					drawSphere(1);
-				glPopMatrix();
-			}
+      // ‚½‚Ä‚ª‚İ
+      setDiffuseColor(1.0f, 0.74f, 0.0f);
+      drawPondeRing(2.3);
 
-			// “ª‚Ì–{‘Ì
-			glTranslated(0, 0, -0.3);
-			//glScaled(1, 1, 1.1);
-			drawSphere(1.6);
+      // “ª‚Ì–{‘Ì
+      setDiffuseColor(1.0f, 0.94f, 0.0f);
+      glTranslated(0, 0, -0.3);
+      //glScaled(1, 1, 1.1);
+      drawSphere(1.6);
 
-			// –Ú
-			glPushMatrix();
-				glTranslated(-0.7, 0.3, -1.3);
-				drawSphere(0.2);
-			glPopMatrix();
+      // Œû
+      glPushMatrix();
+        glTranslated(-0.35, -0.6, -1.3);
+        drawSphere(0.4);
+      glPopMatrix();
 
-			glPushMatrix();
-				glTranslated(0.7, 0.3, -1.3);
-				drawSphere(0.2);
-			glPopMatrix();
+      glPushMatrix();
+        glTranslated(0.35, -0.6, -1.3);
+        drawSphere(0.4);
+      glPopMatrix();
 
-			// Œû
-			glPushMatrix();
-				glTranslated(-0.35, -0.6, -1.3);
-				drawSphere(0.4);
-			glPopMatrix();
+      // –Ú
+      glPushMatrix();
+        setDiffuseColor(0.3f, 0.3f, 0.3f);
+        glTranslated(-0.7, 0.3, -1.3);
+        drawSphere(0.2);
+      glPopMatrix();
 
-			glPushMatrix();
-				glTranslated(0.35, -0.6, -1.3);
-				drawSphere(0.4);
-			glPopMatrix();
+      glPushMatrix();
+        glTranslated(0.7, 0.3, -1.3);
+        drawSphere(0.2);
+      glPopMatrix();
 
-			// •@
-			glPushMatrix();
-				glTranslated(0.0, -0.3, -1.5);
-				drawSphere(0.25);
-			glPopMatrix();
+      // •@
+      glPushMatrix();
+        setDiffuseColor(1.0f, 0.3f, 0.3f);
+        glTranslated(0.0, -0.3, -1.5);
+        drawSphere(0.25);
+      glPopMatrix();
 
-		glPopMatrix();
-	}
+      glPopMatrix();
+    }
 
-	void drawBody()
-	{
-		glPushMatrix();
-			glScaled(1, 5, 1);
-			drawRevolution(&curve_body);
-		glPopMatrix();
-	}
+    void drawLionBody()
+    {
+	  	glPushMatrix();
+	  		glScaled(2, 2, 3);
+        drawSphere(1);
+	  	glPopMatrix();
+    }
 
-  void drawLionBody()
-  {
-		glPushMatrix();
-			glScaled(2, 5, 2);
-      drawSphere(1);
-		glPopMatrix();
-  }
+    void drawLionLeg()
+    {
+
+      int n = 40;
+      float c[][2] = {
+        2.000000, 2.000000, 17.289001, 3.230000, 29.752014, 6.680000, 39.683014, 11.990000, 47.376007, 18.799999, 53.125000, 26.750000, 57.223999, 35.480000, 59.967010, 44.630001, 61.648010, 53.840000, 62.561005, 62.750000,
+        63.000000, 71.000000, 63.000000, 71.000000, 62.544006, 86.606003, 62.351990, 101.648003, 62.388000, 116.162003, 62.615997, 130.184006, 63.000000, 143.750000, 63.503998, 156.895996, 64.092010, 169.658005, 64.727997, 182.072006,
+        65.376007, 194.173996, 66.000000, 206.000000, 66.000000, 206.000000, 69.886993, 218.128006, 73.216003, 229.343994, 76.088989, 239.695999, 78.608002, 249.231995, 80.875000, 258.000000, 82.992004, 266.048004, 85.061005, 273.424011,
+        87.183990, 280.175995, 89.463013, 286.351990, 92.000000, 292.000000, 92.000000, 292.000000, 91.816010, 297.536011, 91.127991, 303.287994, 89.731995, 309.171997, 87.424011, 315.104004, 84.000000, 321.000000, 79.256012, 326.776001,
+      };
+
+      glScaled(0.08, 0.13, 0.08);
+      drawRevolution(n, c);
+    }
+
+    void drawBody()
+    {
+      glPushMatrix();
+      glScaled(1, 3, 1);
+      drawRevolution(&curve_body);
+      glPopMatrix();
+    }
 
     // ƒIƒuƒWƒFƒNƒg‚Ì•`‰æ
     void draw()
     {
-		//```````````````````````````````````
-		//‘æ3T‰Û‘è
-		//---------------------------------------------------------------------
-        // ©“®ƒAƒjƒ[ƒVƒ‡ƒ“‚Ìˆ—
-        if ( IsAutomaticAnimation() && frame_count<max_frame_count ) {
-            // ƒtƒŒ[ƒ€”Ô†‚ÌXV
-            SetSliderValue( FRAME_CONTROLS, ++frame_count );
-            // ©“®ƒAƒjƒ[ƒVƒ‡ƒ“
-            SetAutomaticAnimation();
-        }
-        // è“®ƒAƒjƒ[ƒVƒ‡ƒ“‚Ìˆ—
-        else {
-            // ƒtƒŒ[ƒ€”Ô†‚ğæ“¾
-            frame_count = (int)GetSliderValue( FRAME_CONTROLS );
-            // è“®ƒAƒjƒ[ƒVƒ‡ƒ“
-            SetManualAnimation();
-        }
-		//```````````````````````````````````
+      //```````````````````````````````````
+      //‘æ3T‰Û‘è
+      //---------------------------------------------------------------------
+      // ©“®ƒAƒjƒ[ƒVƒ‡ƒ“‚Ìˆ—
+      if ( IsAutomaticAnimation() && frame_count<max_frame_count ) {
+        // ƒtƒŒ[ƒ€”Ô†‚ÌXV
+        SetSliderValue( FRAME_CONTROLS, ++frame_count );
+        // ©“®ƒAƒjƒ[ƒVƒ‡ƒ“
+        SetAutomaticAnimation();
+      }
+      // è“®ƒAƒjƒ[ƒVƒ‡ƒ“‚Ìˆ—
+      else {
+        // ƒtƒŒ[ƒ€”Ô†‚ğæ“¾
+        frame_count = (int)GetSliderValue( FRAME_CONTROLS );
+        // è“®ƒAƒjƒ[ƒVƒ‡ƒ“
+        SetManualAnimation();
+      }
+      //```````````````````````````````````
 
-        // ƒX[ƒp[ƒNƒ‰ƒX‚Ì•`‰æƒƒ\ƒbƒh‚ğƒR[ƒ‹i•K{j
-        ModelerView::draw();
+      // ƒX[ƒp[ƒNƒ‰ƒX‚Ì•`‰æƒƒ\ƒbƒh‚ğƒR[ƒ‹i•K{j
+      ModelerView::draw();
 
-        // •`‰æŠJn
-        BeginPaint();
+      // •`‰æŠJn
+      BeginPaint();
 
-        //---------------------------------------------------------------------
-        // ƒIƒuƒWƒFƒNƒg‚ğ•`‰æ
-        //---------------------------------------------------------------------
+      //---------------------------------------------------------------------
+      // ƒIƒuƒWƒFƒNƒg‚ğ•`‰æ
+      //---------------------------------------------------------------------
 
-        // ```ƒvƒƒOƒ‰ƒ€‚ğ‹Lq```
+      // ```ƒvƒƒOƒ‰ƒ€‚ğ‹Lq```
 
-        //drawDumpling();
+      //drawDumpling();
 
-        //drawTorus(4, 2);
-        //drawEllipsoid(3, 4, 5);
+      //drawTorus(4, 2);
+      //drawEllipsoid(3, 4, 5);
 
-        glScaled(1, 5, 1);
-        drawRevolution(&curve_cup);
+      //glScaled(1, 5, 1);
+      //drawRevolution(&curve_cup);
 
-        //drawHead();
-        //drawBody();
+      //glScaled(1, 3, 1);
+      //drawRevolution(&curve_head);
 
-        //glScaled(1, 3, 1);
-        //drawRevolution(&curve_head);
-        //
+      //drawHead();
+      //drawBody();
 
-        //drawLionBody();
+      //setAmbientColor(0.1f, 0.84f, 0.0f);
 
+      glPushMatrix();
 
-		//---------------------------------------------------------------------
+        setDiffuseColor(1.0f, 0.94f, 0.0f);
+        drawLionBody();
 
-        // •`‰æI—¹
-        EndPaint();
+        // ‘«
+        glPushMatrix();
+          glTranslated(1, 0, -1);
+          glRotated(10, 1, 0, 1);
+          drawLionLeg();
+        glPopMatrix();
+
+        glPushMatrix();
+          glTranslated(-1, 0, -1);
+          glRotated(10, 1, 0, -1);
+          drawLionLeg();
+        glPopMatrix();
+
+        glPushMatrix();
+          glTranslated(1, 0, 1.5);
+          glRotated(-10, 1, 0, -1);
+          drawLionLeg();
+        glPopMatrix();
+
+        glPushMatrix();
+          glTranslated(-1, 0, 1.5);
+          glRotated(-10, 1, 0, 1);
+          drawLionLeg();
+        glPopMatrix();
+
+        // ‚µ‚Á‚Û
+        glPushMatrix();
+          glTranslated(0, 0, 2);
+          double l = 0.5;
+          double r = 0.2;
+          for(; r>=0.1; r-=0.008, l-=0.01) {
+            drawCylinder(l, 0.02 + r, r);
+            glTranslated(0, 0, l);
+            glRotated(10, -1, 0, 0);
+          }
+          glScaled(0.2, 0.2, 0.2);
+          drawPondeRing(1.5);
+        glPopMatrix();
+
+        // “ª
+        glPushMatrix();
+          glTranslated(0, 1, -3);
+          drawLionHead();
+        glPopMatrix();
+
+      glPopMatrix();
+
+      // ‰a
+      glPushMatrix();
+        setDiffuseColor(0.62f, 0.32f, 0.17f);
+        glTranslated(0, -5, -5);
+        glRotated(90, 1, 0.1, 0);
+        drawTorus(1.5,0.75);
+      glPopMatrix();
+
+      //---------------------------------------------------------------------
+
+      // •`‰æI—¹
+      EndPaint();
     }
 };
 

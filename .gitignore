@@ -2,6 +2,8 @@
 *.omc
 *.omakedb
 *.omakedb.lock
+*.swp
+a.out
 .DS_Store
 impressionist/impressionist
 impressionist/src/impressionist
