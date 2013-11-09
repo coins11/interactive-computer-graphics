@@ -1,6 +1,11 @@
 *.o
 *.omc
+*.omakedb
+*.omakedb.lock
 .DS_Store
 impressionist/impressionist
 impressionist/src/impressionist
-
+Modeler/main
+Modeler/robotarm
+Modeler/src/main
+Modeler/src/robotarm
