@@ -155,12 +155,14 @@
 // (this is the case on most unix plateforms).
 #ifdef cimg_use_png
 extern "C" {
-#include "png/png.h"
+//#include "png/png.h"
+#include "png.h"
 }
 #endif
 #ifdef cimg_use_jpeg
 extern "C" {
-#include "jpeg/jpeglib.h"
+//#include "jpeg/jpeglib.h"
+#include "jpeglib.h"
 }
 #endif
 #ifdef cimg_use_tiff
