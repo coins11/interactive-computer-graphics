@@ -13,7 +13,7 @@
 #include <iostream>
 
 // フレーム番号の最大値
-int max_frame_count = 450;
+int max_frame_count = 120 * 2;
 
 //
 // プリミティブ
@@ -586,7 +586,7 @@ class Model : public ModelerView {
 
           // 頭
           glPushMatrix();
-            double angle_head = sin(frame_count / 10.0) * 20;
+            double angle_head = sin(frame_count / 12.0) * 20;
             glRotated(angle_head, 1,0,0 );
             glTranslated(0, 1, -3);
             drawLionHead();
