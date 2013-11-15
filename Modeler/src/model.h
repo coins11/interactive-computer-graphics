@@ -13,7 +13,7 @@
 #include <iostream>
 
 // フレーム番号の最大値
-int max_frame_count = 120 * 2;
+int max_frame_count = 360 / 2;
 
 //
 // プリミティブ
@@ -288,14 +288,15 @@ class Model : public ModelerView {
 
     // フレーム番号
     int frame_count;
+    int distance_feed;
 
     //-------------------------------------------------------------------------
     // 制御変数
     //-------------------------------------------------------------------------
 
     // 〜〜〜変数を追加〜〜〜
-    double angle;
-    double angle2;
+    double angle_d;
+    double angle_rad;
     Vec3d pos_body;
     double r;
 
@@ -311,16 +312,17 @@ class Model : public ModelerView {
 
     // フレーム番号の初期化
     frame_count = 0;
+    distance_feed = 60;
 
     //---------------------------------------------------------------------
     // 初期化
     //---------------------------------------------------------------------
 
     // 〜〜〜変数を初期化〜〜〜
-    angle = 0;
-    angle2 = 0;
+    angle_rad = 0;
+    angle_d = 0;
     r = 6;
-    pos_body = Vec3d( r*sin(angle), 0, r*cos(angle));
+    pos_body = Vec3d( r*sin(angle_rad), 0, r*cos(angle_rad));
 
     //〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜
   }
@@ -341,12 +343,12 @@ class Model : public ModelerView {
       // 差分式を使って振り子の角度を更新
 
       // 振り子の角度を時間シフト
-      angle  = M_PI / 120 * frame_count;
-      angle2 = angle * (180 / M_PI);
+      angle_d = frame_count * 2;
+      angle_rad  = (M_PI / 180) * angle_d;
 
       // ボールの位置座標を更新
       // （位置座標の初期化と同じ）
-      pos_body = Vec3d( r*sin(angle), 0, r*cos(angle));
+      pos_body = Vec3d( r*sin(angle_rad), 0, r*cos(angle_rad));
 
       //-----------------------------------------------------------------
     }
@@ -431,6 +433,7 @@ class Model : public ModelerView {
     void drawLionBody()
     {
 	  	glPushMatrix();
+        setDiffuseColor(1.0f, 0.94f, 0.0f);
 	  		glScaled(2, 2, 3);
         drawSphere(1);
 	  	glPopMatrix();
@@ -476,6 +479,7 @@ class Model : public ModelerView {
       else {
         // フレーム番号を取得
         frame_count = (int)GetSliderValue( FRAME_CONTROLS );
+        distance_feed = (int)GetSliderValue( DISTANCE_FEED );
         // 手動アニメーション
         SetManualAnimation();
       }
@@ -506,11 +510,9 @@ class Model : public ModelerView {
 
       //drawHead();
       //drawBody();
-
-      //setAmbientColor(0.1f, 0.84f, 0.0f);
-      //
       
       glScaled(0.5, 0.5, 0.5);
+      glTranslated(0, 5, 0);
 
       // 土台
       glPushMatrix();
@@ -523,7 +525,7 @@ class Model : public ModelerView {
 
       // 餌
       glPushMatrix();
-        glRotated( angle2+60, 0,1,0 );
+        glRotated( angle_d + distance_feed, 0,1,0 );
         glTranslated(11, -2.5, 0);
 
         setDiffuseColor(0.62f, 0.32f, 0.17f);
@@ -535,69 +537,71 @@ class Model : public ModelerView {
 
       glPushMatrix();
 
-        glRotated( angle2, 0,1,0 );
+        glRotated( angle_d, 0,1,0 );
         glTranslated(8, 0, 0);
         glTranslated(0, 0, -1);
 
-        setDiffuseColor(1.0f, 0.94f, 0.0f);
+        double angle_body = sin(angle_rad * 6) * 10;
+        glRotated(angle_body, 1,0,0 );
         drawLionBody();
 
         // 足
-        double leg_angle = sin(frame_count / 5.0) * 10;
+        double leg_angle = sin(angle_rad * 6) * 10;
+        double leg_dx = 0.5;
         glPushMatrix();
-        glTranslated(1, 0, -1);
+        glTranslated(leg_dx, 0, -1);
         glRotated(10+leg_angle, 1, 0, 1);
         drawLionLeg();
         glPopMatrix();
 
         glPushMatrix();
-        glTranslated(-1, 0, -1);
-        glRotated(10-leg_angle, 1, 0, -1);
+        glTranslated(-leg_dx, 0, -1);
+        glRotated(10+leg_angle, 1, 0, -1);
         drawLionLeg();
         glPopMatrix();
 
         glPushMatrix();
-        glTranslated(1, 0, 1.5);
-        glRotated(-10+leg_angle, 1, 0, -1);
+        glTranslated(leg_dx, 0, 1.5);
+        glRotated(-10-leg_angle, 1, 0, -1);
         drawLionLeg();
         glPopMatrix();
 
-          glPushMatrix();
-            glTranslated(-1, 0, 1.5);
-            glRotated(-10-leg_angle, 1, 0, 1);
-            drawLionLeg();
-          glPopMatrix();
+        glPushMatrix();
+          glTranslated(-leg_dx, 0, 1.5);
+          glRotated(-10-leg_angle, 1, 0, 1);
+          drawLionLeg();
+        glPopMatrix();
 
-          // しっぽ
-          glPushMatrix();
-            double angle_sippo = sin(frame_count / 5.0) * 10;
-            glTranslated(0, 0, 2);
-            double l = 0.5;
-            double r = 0.2;
-            glRotated(frame_count, 0, 0, 1);
-            for(; r>=0.1; r-=0.008, l-=0.01) {
-              drawCylinder(l, 0.02 + r, r);
-              glTranslated(0, 0, l);
-              glRotated(angle_sippo, -1, 0, 0);
-            }
-            glScaled(0.2, 0.2, 0.2);
-            drawPondeRing(1.5);
-          glPopMatrix();
+        // しっぽ
+        glPushMatrix();
+          double angle_sippo = sin(angle_rad * 6) * 10;
+          glTranslated(0, 0, 2);
+          double l = 0.5;
+          double r = 0.2;
+          glRotated(angle_d, 0, 0, 1);
+          for(; r>=0.1; r-=0.008, l-=0.01) {
+            drawCylinder(l, 0.02 + r, r);
+            glTranslated(0, 0, l);
+            glRotated(angle_sippo, -1, 0, 0);
+          }
+          glScaled(0.2, 0.2, 0.2);
+          drawPondeRing(1.5);
+        glPopMatrix();
 
-          // 頭
-          glPushMatrix();
-            double angle_head = sin(frame_count / 12.0) * 20;
-            glRotated(angle_head, 1,0,0 );
-            glTranslated(0, 1, -3);
-            drawLionHead();
-          glPopMatrix();
+        // 頭
+        glPushMatrix();
+          double angle_head = sin(angle_rad * 6) * 5;
+          glRotated(angle_head, 1,0,0 );
+          glTranslated(0, 1, -3);
+          drawLionHead();
+        glPopMatrix();
 
-      glPopMatrix();
+       glPopMatrix();
 
-      //---------------------------------------------------------------------
+       //---------------------------------------------------------------------
 
-      // 描画終了
-      EndPaint();
+       // 描画終了
+       EndPaint();
     }
 };
 
