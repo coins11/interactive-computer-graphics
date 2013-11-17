@@ -3,6 +3,9 @@
 #define _USE_MATH_DEFINES
 #endif
 
+#ifndef __ANIMATOR_H__
+#define __ANIMATOR_H__
+
 // Include header files
 #include <math.h>
 #include <FL/gl.h>
@@ -29,3 +32,5 @@ void SetSliderValue( int enumeration, double value )
 {
     ModelerApplication::Instance()->SetControlValue( enumeration, value );
 }
+
+#endif
