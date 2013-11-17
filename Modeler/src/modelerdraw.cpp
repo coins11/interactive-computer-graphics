@@ -1,6 +1,7 @@
 #pragma warning(disable:4996)
 
 #include "modelerdraw.h"
+#include <GL/glut.h>
 #include <FL/gl.h>
 #ifdef __APPLE__
 #include <OpenGL/glu.h>
@@ -236,6 +237,7 @@ void drawSphere(double r)
         }
         
         gluq = gluNewQuadric();
+
         gluQuadricDrawStyle( gluq, GLU_FILL );
         gluQuadricTexture( gluq, GL_TRUE );
         gluSphere(gluq, r, divisions, divisions);
@@ -425,4 +427,9 @@ void drawTriangle( double x1, double y1, double z1,
         glVertex3d( x3, y3, z3 );
         glEnd();
     }
+}
+
+void drawCone(double b, double h, int s, int st)
+{
+	glutSolidCone(b, h, s, st);
 }
