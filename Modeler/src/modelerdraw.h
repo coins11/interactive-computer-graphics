@@ -94,4 +94,7 @@ void drawTriangle( double x1, double y1, double z1,
 
 
 void drawCone(double b, double h, int s, int st);
+
+void drawFoldingBox(double l, double a);
+
 #endif

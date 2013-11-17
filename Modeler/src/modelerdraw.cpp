@@ -433,3 +433,73 @@ void drawCone(double b, double h, int s, int st)
 {
 	glutSolidCone(b, h, s, st);
 }
+
+void drawFoldingBox(double l, double a)
+{
+	float square[][3] ={
+		l, l,  0,
+		l, -l, 0,
+		-l, -l, 0, 
+		-l, l, 0
+	};
+	float norm[]={0.,0.,-1.};
+	const int SQUARE = 1;
+
+	glNewList( SQUARE, GL_COMPILE );
+		glBegin(GL_QUADS);
+		glNormal3fv( norm );
+
+		for(int i=0; i<4; i++ )
+			glVertex3fv(square[i]);
+		glEnd();
+	glEndList();
+
+	glTranslatef( 0.,0.,l );
+
+	glCallList( SQUARE );
+
+	glPushMatrix();
+		glTranslatef( -l,0.,0. );
+		glRotatef( a,0,l,0. );
+		glTranslatef( l,0.,0. );
+
+		glTranslatef( -2 * l,0.,0. );
+		glCallList( SQUARE );
+
+		glPushMatrix();
+			glTranslatef( 0,-l,0. );
+			glRotatef( -a,l,0,0. );
+			glTranslatef( 0,l,0. );
+
+			glTranslatef( 0, -2 * l,0. );
+			glCallList( SQUARE );
+		glPopMatrix();
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef( l,0.,0. );
+		glRotatef( -a,0,l,0. );
+		glTranslatef( -l,0.,0. );
+
+		glTranslatef( 2 * l,0.,0. );
+		glCallList( SQUARE );
+
+		glPushMatrix();
+			glTranslatef( l,0.,0. );
+			glRotatef( -a,0,l,0. );
+			glTranslatef( -l,0.,0. );
+
+			glTranslatef( 2 * l,0.,0. );
+			glCallList( SQUARE );
+
+			glPushMatrix();
+				glTranslatef( l, l,0. );
+				glRotatef( a,l,0,0. );
+				glTranslatef( -l,-l,0. );
+
+				glTranslatef( 0, 2 * l, 0. );
+				glCallList( SQUARE );
+			glPopMatrix();
+		glPopMatrix();
+	glPopMatrix();
+}

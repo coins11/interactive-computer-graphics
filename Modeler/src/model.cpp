@@ -105,11 +105,7 @@ void Model::draw()
 	setDiffuseColor( 0, 1, 0 );
 	setAmbientColor( 0, 1, 0 );
 	setSpecularColor( 1, 0, 0 );
-	glPushMatrix();
-	glTranslated( (double)GetSliderValue(X_POSITION),0.,0. );
-	drawCone(10, 10, 100, 10);
-	glPopMatrix();
-	// 〜〜〜プログラムを記述〜〜
+	drawFoldingBox(3, GetSliderValue(FOLD_ANGLE));
 
 	//---------------------------------------------------------------------
 
