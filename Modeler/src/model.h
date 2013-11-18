@@ -288,7 +288,6 @@ class Model : public ModelerView {
 
     // フレーム番号
     int frame_count;
-    int distance_feed;
 
     //-------------------------------------------------------------------------
     // 制御変数
@@ -297,8 +296,12 @@ class Model : public ModelerView {
     // 〜〜〜変数を追加〜〜〜
     double angle_d;
     double angle_rad;
-    Vec3d pos_body;
-    double r;
+
+    double angle_feed;
+    double angle_body;
+    double angle_leg;
+    double angle_tail;
+    double angle_head;
 
     //〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜
 
@@ -312,7 +315,6 @@ class Model : public ModelerView {
 
     // フレーム番号の初期化
     frame_count = 0;
-    distance_feed = 60;
 
     //---------------------------------------------------------------------
     // 初期化
@@ -321,8 +323,12 @@ class Model : public ModelerView {
     // 〜〜〜変数を初期化〜〜〜
     angle_rad = 0;
     angle_d = 0;
-    r = 6;
-    pos_body = Vec3d( r*sin(angle_rad), 0, r*cos(angle_rad));
+
+    angle_feed = 60;
+    angle_body = 0;
+    angle_leg  = 0;
+    angle_tail = 10;
+    angle_head = 0;
 
     //〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜
   }
@@ -340,15 +346,13 @@ class Model : public ModelerView {
 
       // 〜〜〜プログラムを記述〜〜〜
       
-      // 差分式を使って振り子の角度を更新
-
-      // 振り子の角度を時間シフト
-      angle_d = frame_count * 2;
+      angle_d    = frame_count * 2;
       angle_rad  = (M_PI / 180) * angle_d;
 
-      // ボールの位置座標を更新
-      // （位置座標の初期化と同じ）
-      pos_body = Vec3d( r*sin(angle_rad), 0, r*cos(angle_rad));
+      angle_body = sin(angle_rad * 6) * 10;
+      angle_leg  = sin(angle_rad * 6) * 10;
+      angle_tail = sin(angle_rad * 6) * 10;
+      angle_head = sin(angle_rad * 6) * 5;
 
       //-----------------------------------------------------------------
     }
@@ -361,6 +365,12 @@ class Model : public ModelerView {
       //-----------------------------------------------------------------
 
       // 〜〜〜プログラムを記述〜〜〜
+
+      angle_feed = GetSliderValue( ANGLE_FEED );
+      angle_body = GetSliderValue( ANGLE_BODY );
+      angle_leg  = GetSliderValue( ANGLE_LEG  );
+      angle_tail = GetSliderValue( ANGLE_TAIL );
+      angle_head = GetSliderValue( ANGLE_HEAD );
 
       //-----------------------------------------------------------------
     }
@@ -394,7 +404,6 @@ class Model : public ModelerView {
       // 頭の本体
       setDiffuseColor(1.0f, 0.94f, 0.0f);
       glTranslated(0, 0, -0.3);
-      //glScaled(1, 1, 1.1);
       drawSphere(1.6);
 
       // 口
@@ -496,7 +505,6 @@ class Model : public ModelerView {
       else {
         // フレーム番号を取得
         frame_count = (int)GetSliderValue( FRAME_CONTROLS );
-        distance_feed = (int)GetSliderValue( DISTANCE_FEED );
         // 手動アニメーション
         SetManualAnimation();
       }
@@ -529,6 +537,7 @@ class Model : public ModelerView {
       //drawBody();
 
       //drawGunya();
+      //drawPondeRing(2.3);
       
       glScaled(0.5, 0.5, 0.5);
       glTranslated(0, 5, 0);
@@ -544,12 +553,12 @@ class Model : public ModelerView {
 
       // 餌
       glPushMatrix();
-        glRotated( angle_d + distance_feed, 0,1,0 );
+        glRotated( angle_d + angle_feed, 0,1,0 );
         glTranslated(11, -2.5, 0);
 
         setDiffuseColor(0.62f, 0.32f, 0.17f);
         glRotated(90,  0,1,0);
-        glRotated(30,  0,0,1);
+        glRotated(-10,  cos(angle_rad), 0, sin(angle_rad) );
         drawTorus(1.5,0.75);
       glPopMatrix();
 
@@ -560,40 +569,37 @@ class Model : public ModelerView {
         glTranslated(8, sin(angle_rad * 6), 0);
         glTranslated(0, 0, -1);
 
-        double angle_body = sin(angle_rad * 6) * 10;
         glRotated(angle_body, 1,0,0 );
         drawLionBody();
 
         // 足
-        double leg_angle = sin(angle_rad * 6) * 10;
         double leg_dx = 0.5;
         glPushMatrix();
           glTranslated(leg_dx, 0, -1);
-          glRotated(10+leg_angle, 1, 0, 1);
+          glRotated(10+angle_leg, 1, 0, 1);
           drawLionLeg();
         glPopMatrix();
 
         glPushMatrix();
           glTranslated(-leg_dx, 0, -1);
-          glRotated(10+leg_angle, 1, 0, -1);
+          glRotated(10+angle_leg, 1, 0, -1);
           drawLionLeg();
         glPopMatrix();
 
         glPushMatrix();
           glTranslated(leg_dx, 0, 1.5);
-          glRotated(-20 -2 * leg_angle, 1, 0, -0.5);
+          glRotated(-10 -3 * angle_leg, 1, 0, -0.4);
           drawLionLeg();
         glPopMatrix();
 
         glPushMatrix();
           glTranslated(-leg_dx, 0, 1.5);
-          glRotated(-20 -2 * leg_angle, 1, 0, 0.5);
+          glRotated(-10 -3 * angle_leg, 1, 0, 0.4);
           drawLionLeg();
         glPopMatrix();
 
         // しっぽ
         glPushMatrix();
-          double angle_sippo = sin(angle_rad * 6) * 10;
           glTranslated(0, 0, 2);
           double l = 0.5;
           double r = 0.2;
@@ -601,7 +607,7 @@ class Model : public ModelerView {
           for(; r>=0.1; r-=0.008, l-=0.01) {
             drawCylinder(l, 0.02 + r, r);
             glTranslated(0, 0, l);
-            glRotated(angle_sippo, -1, 0, 0);
+            glRotated(angle_tail, -1, 0, 0);
           }
           glScaled(0.2, 0.2, 0.2);
           drawPondeRing(1.5);
@@ -609,7 +615,6 @@ class Model : public ModelerView {
 
         // 頭
         glPushMatrix();
-          double angle_head = sin(angle_rad * 6) * 5;
           glRotated(angle_head, 1,0,0 );
           glTranslated(0, 1, -3);
           drawLionHead();
