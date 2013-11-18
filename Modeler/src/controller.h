@@ -12,10 +12,9 @@
 
 // コントローラ識別用の列挙子
 enum CONTROLLERS {
-
-	FRAME_CONTROLS,   // フレームコントローラ（変更しないこと)
+	FRAME_CONTROLS,
 	X_POSITION,
-    // 〜〜〜列挙子を追加〜〜〜
+	FOLD_ANGLE,
 
     NUM_CONTROLS,   // コントローラ数（必ず末尾に追加）
 };

@@ -7,7 +7,7 @@
 
 #include <FL/gl.h>
 #include <cstdio>
-
+#include <tuple>
 
 enum DrawModeSetting_t 
 { NONE=0, NORMAL, WIREFRAME, FLATSHADE, };
@@ -94,4 +94,11 @@ void drawTriangle( double x1, double y1, double z1,
 
 
 void drawCone(double b, double h, int s, int st);
+
+void drawFoldingBox(float l, std::tuple<float, float, float, float, float> a);
+
+void drawTorus(double inner_r, double outer_r, int meridian, int longitude);
+
+void drawIcosahedron();
+
 #endif

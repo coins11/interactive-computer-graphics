@@ -2,6 +2,7 @@
 
 CC  = gcc-4.8
 CPP = g++-4.8
+CPPFLAGS = -std=c++11
 PROGRAMS = robotarm main
 
 main: src/main

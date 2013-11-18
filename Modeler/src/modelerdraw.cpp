@@ -11,6 +11,10 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string.h>
+#include <tuple>
+#include <vector>
+#include <cmath>
+#include <functional>
 
 using namespace std;
 
@@ -432,4 +436,158 @@ void drawTriangle( double x1, double y1, double z1,
 void drawCone(double b, double h, int s, int st)
 {
 	glutSolidCone(b, h, s, st);
+}
+
+void drawFoldingBox(float l, std::tuple<float, float, float, float, float> a)
+{
+	float square[][3] ={
+		l, l,  0,
+		l, -l, 0,
+		-l, -l, 0, 
+		-l, l, 0
+	};
+	float norm[]={0.,0.,-1.};
+	const int SQUARE = 1;
+
+	glNewList( SQUARE, GL_COMPILE );
+		glBegin(GL_QUADS);
+		glNormal3fv( norm );
+
+		for(int i=0; i<4; i++ )
+			glVertex3fv(square[i]);
+		glEnd();
+	glEndList();
+
+	glTranslatef( 0.,0.,l );
+
+	glCallList( SQUARE );
+
+	glPushMatrix();
+		glTranslatef( -l,0.,0. );
+		glRotatef( std::get<0>(a),0,l,0. );
+		glTranslatef( l,0.,0. );
+
+		glTranslatef( -2 * l,0.,0. );
+		glCallList( SQUARE );
+
+		glPushMatrix();
+			glTranslatef( 0,-l,0. );
+			glRotatef( -std::get<1>(a),l,0,0. );
+			glTranslatef( 0,l,0. );
+
+			glTranslatef( 0, -2 * l,0. );
+			glCallList( SQUARE );
+		glPopMatrix();
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef( l,0.,0. );
+		glRotatef( -std::get<2>(a),0,l,0. );
+		glTranslatef( -l,0.,0. );
+
+		glTranslatef( 2 * l,0.,0. );
+		glCallList( SQUARE );
+
+		glPushMatrix();
+			glTranslatef( l,0.,0. );
+			glRotatef( -std::get<3>(a),0,l,0 );
+			glTranslatef( -l,0.,0. );
+
+			glTranslatef( 2 * l,0.,0. );
+			glCallList( SQUARE );
+
+			glPushMatrix();
+				glTranslatef( l, l,0. );
+				glRotatef( std::get<4>(a),l,0,0. );
+				glTranslatef( -l,-l,0. );
+
+				glTranslatef( 0, 2 * l, 0. );
+				glCallList( SQUARE );
+			glPopMatrix();
+		glPopMatrix();
+	glPopMatrix();
+}
+
+void drawTorus(double inner_r, double outer_r, int meridian, int longitude)
+{
+	typedef std::tuple<double, double, double> Vec3;
+	using namespace std;
+
+	vector<Vec3> p;
+
+	for (int i = 0; i < longitude; i++) {
+		double t1 = i * 2 * M_PI / longitude;
+
+		for (int j = 0; j < meridian; j++) {
+			double t2 = j * 2 * M_PI / meridian; 
+
+			double x = outer_r * cos(t1) + inner_r * cos(t2) * cos(t1);
+			double y = outer_r * sin(t1) + inner_r * cos(t2) * sin(t1);
+			double z = inner_r * sin(t2);
+
+			p.push_back( make_tuple(x, y, z) );
+		}
+	}
+
+	function<void(int, int, int)> plot = [p](int i0, int i1, int i2) -> void {
+		Vec3 v0 = p[i0];							    					    
+		Vec3 v1 = p[i1];							    					    
+		Vec3 v2 = p[i2];
+
+		function< Vec3(Vec3, Vec3) > sub   = [](Vec3 a, Vec3 b) -> Vec3 {
+			return make_tuple(
+					get<0>(b) - get<0>(a),
+					get<1>(b) - get<1>(a),
+					get<2>(b) - get<2>(a));
+		};
+
+		function< Vec3(Vec3, Vec3) > outer = [](Vec3 a, Vec3 b) -> Vec3 {
+			return make_tuple(
+					get<1>(a) * get<2>(b) - get<2>(a) * get<1>(b),
+					get<2>(a) * get<0>(b) - get<0>(a) * get<2>(b),
+					get<0>(a) * get<1>(b) - get<1>(a) * get<0>(b));
+		};
+
+		Vec3 n = outer( sub(v1, v0), sub(v2, v0) );
+
+		glBegin( GL_TRIANGLES );                      							    					    
+			glNormal3d( get<0>(n), get<1>(n), get<2>(n) );
+			glVertex3d( get<0>(v0), get<1>(v0), get<2>(v0) );
+			glVertex3d( get<0>(v1), get<1>(v1), get<2>(v1) );
+			glVertex3d( get<0>(v2), get<1>(v2), get<2>(v2) );
+		glEnd();
+	};
+
+	int v0, v1, v2, v3;
+	for (int i = 0; i < longitude - 1; i++) {
+		for (int j = 0; j < meridian - 1; j++) {
+			v0 = j + i * meridian;
+			v1 = j + i * meridian + 1;
+			v2 = j + (i + 1) * meridian;
+			v3 = j + (i + 1) * meridian + 1;
+			
+
+			plot(v2, v1, v0);
+			plot(v2, v3, v1);
+		}
+		plot(v2 + 1, v1 + 1, v0 + 1);
+		plot(i * meridian, v0 + 1, (i + 1) * meridian);
+	}
+
+	for (int j = 0; j < meridian - 1; j++) {
+		v0 = j + (longitude - 1) * meridian;
+		v1 = j + (longitude - 1) * meridian + 1;
+		v2 = j;
+		v3 = j + 1;
+		
+		plot(v2, v1, v0);
+		plot(v1, v2, v3);
+	}
+	plot(v2 + 1, 0, v0 + 1);
+	plot(0, (longitude - 1) * meridian, v0 + 1);
+}
+
+void drawIcosahedron()
+{
+	glutSolidIcosahedron();
 }

@@ -1,5 +1,6 @@
 #include "controller.h"
 #include "model.h"
+#include <cmath>
 
 void SetController( ModelerControl* controls )
 {
@@ -8,4 +9,6 @@ void SetController( ModelerControl* controls )
 
     // 〜〜〜スライダを追加〜〜〜
 	controls[X_POSITION] = ModelerControl( "X-Position", -20.0f, 20.0f, 0.1f, 0.0f );
+	controls[FOLD_ANGLE] = ModelerControl( "Fold Angle", 0.f, 90, 0.01f, 0.0f );
+
 }

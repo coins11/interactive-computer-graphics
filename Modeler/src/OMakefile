@@ -8,7 +8,7 @@ lib(p) =
 	return $(filter-out $(addsuffix .o, $(filter-out $p, $(PROGRAMS))), $(OBJECTS))
 
 .SCANNER: scan-all-%.cpp: %.cpp
-    $(CPP) -MM $(shell fltk-config --cxxflags) $<
+    $(CPP) -MM $(CPPFLAGS) $(shell fltk-config --cxxflags) $<
 
 .SCANNER: scan-all-%.c: %.c
     $(CC) -MM $(shell fltk-config --cxxflags) $<
@@ -17,10 +17,10 @@ clean:
 	rm -r *.o $(PROGRAMS)
 
 $(PROGRAMS): % : $(OBJECTS)
-	$(CPP) -fpermissive -o $@ $(shell fltk-config --use-images --ldflags --use-gl) -L/opt/X11/lib -lX11 $(lib $@)
+	$(CPP) -fpermissive -o $@ $(CPPFLAGS) $(shell fltk-config --use-images --ldflags --use-gl) -L/opt/X11/lib -lX11 $(lib $@)
 
 %.o: %.cpp :scanner: scan-all-%.cpp
-	$(CPP) -fpermissive $(shell fltk-config --cxxflags) -I/opt/X11/include -c $<
+	$(CPP) -fpermissive $(CPPFLAGS) $(shell fltk-config --cxxflags) -I/opt/X11/include -c $<
 
 %.o: %.c :scanner: scan-all-%.c
 	$(CC) $(shell fltk-config --cxxflags) -c $<
