@@ -1,25 +1,18 @@
-//=============================================================================
-// ファイル: controller.h
-//=============================================================================
-// スライダコントローラの設定
-//=============================================================================
-
 #ifndef __CONTROLLER_H__
 #define __CONTROLLER_H__
 
-// ヘッダファイルのインクルード
 #include "modelerapp.h"
 
-// コントローラ識別用の列挙子
 enum CONTROLLERS {
 	FRAME_CONTROLS,
-	X_POSITION,
-	FOLD_ANGLE,
-
-    NUM_CONTROLS,   // コントローラ数（必ず末尾に追加）
+	FOLD_ANGLE1,
+	FOLD_ANGLE2,
+	FOLD_ANGLE3,
+	FOLD_ANGLE4,
+	FOLD_ANGLE5,
+    NUM_CONTROLS,
 };
 
 extern void SetController( ModelerControl* controls );
 
-// __CONTROLLER_H__
 #endif

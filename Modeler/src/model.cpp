@@ -21,8 +21,12 @@ void Model::SetAutomaticAnimation()
 
 void Model::SetManualAnimation()
 {
-	float a = GetSliderValue(FOLD_ANGLE);
-	angle = std::make_tuple(a, a, a, a, a);
+	angle = std::make_tuple(
+			GetSliderValue(FOLD_ANGLE1),
+			GetSliderValue(FOLD_ANGLE2),
+			GetSliderValue(FOLD_ANGLE3),
+			GetSliderValue(FOLD_ANGLE4),
+			GetSliderValue(FOLD_ANGLE5));
 }
 
 void Model::BeginPaint()
@@ -51,14 +55,10 @@ void Model::draw()
 
 	BeginPaint();
 
-	//drawSomeCylinder();
 	setDiffuseColor( 0, 1, 0 );
 	setAmbientColor( 0, 1, 0 );
 	setSpecularColor( 1, 0, 0 );
-
-	//drawFoldingBox(3, angle);
-	//drawTorus(5, 10, 60, 100);
-	drawIcosahedron();
+	drawFoldingBox(3, angle);
 
 	EndPaint();
 }
