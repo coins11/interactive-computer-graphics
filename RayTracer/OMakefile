@@ -1,0 +1,17 @@
+.PHONY: clean
+
+CXX = g++-4.8
+CXXFLAGS = -std=c++11
+PROGRAMS = main
+
+.SCANNER: scan-all-%.cpp: %.cpp
+    $(CXX) -MM $(CXXFLAGS) $(shell fltk-config --cxxflags) $<
+
+main: src/main
+	cp $< $@
+
+clean:
+	rm $(PROGRAMS)
+
+.DEFAULT: $(PROGRAMS)
+.SUBDIRS: src

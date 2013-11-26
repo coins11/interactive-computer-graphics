@@ -1,0 +1,8 @@
+.PHONY: clean
+
+clean:
+	rm -r *.o 
+
+%.o: %.cpp :scanner: scan-all-%.cpp
+	$(CXX) -fpermissive $(CXXFLAGS) $(shell fltk-config --cxxflags) -I/opt/X11/include -c $<
+
