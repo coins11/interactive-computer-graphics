@@ -47,6 +47,7 @@ protected:
   std::string Line;                  // The line buffer
   std::string::const_iterator PositionInCurrentLine;
 
+  bool  isFirst = true;
   int   ColNumber;		// The number of the current column
   int   LineNumber;             // The number of the line in the file
   mutable int   LastPrintedLine;        // The line number of the last printed line

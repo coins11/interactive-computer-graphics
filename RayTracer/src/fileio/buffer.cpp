@@ -48,11 +48,12 @@ char Buffer::GetCh() {
   }
 
   // test for data
-  if ( PositionInCurrentLine != Line.end() )
+  if ( isFirst )
   {
+	   isFirst = false;
        // Nothing has been read-in yet, so read the first line
        GetLine();
-       if ( PositionInCurrentLine != Line.end() )
+       if (!inStream)
        {
     	   return '\0';
        }
