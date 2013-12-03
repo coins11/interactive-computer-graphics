@@ -57,21 +57,32 @@ Trimesh::doubleCheck()
 // Calculates and returns the normal of the triangle too.
 bool TrimeshFace::intersectLocal( const ray& r, isect& i ) const
 {
-    // YOUR CODE HERE:
-    // Add triangle intersection code here.
-    // it currently ignores all triangles and just return false.
-    //
-    // Note that you are only intersecting a single triangle, and the vertices
-    // of the triangle are supplied to you by the trimesh class.
-    //
-    // You should retrieve the vertices using code like this:
-    //
-    // const Vec3d& a = parent->vertices[ids[0]];
-    // const Vec3d& b = parent->vertices[ids[1]];
-    // const Vec3d& c = parent->vertices[ids[2]];
+	Vec3d p = r.getPosition();	// Rayの位置ベクトルpを取得
+	Vec3d d = r.getDirection();	// Rayの方向ベクトルdを取得
+	Vec3d& alpha = parent->vertices[ids[0]];	// 三角形の頂点alphaを取得
+	Vec3d& beta = parent->vertices[ids[1]]; 	// 三角形の頂点betaを取得
+	Vec3d& gamma = parent->vertices[ids[2]]; 	// 三角形の頂点gammaを取得
+	Vec3d normal = ((beta-alpha)^(gamma-alpha)); // 平面の法線
 
-    return false;
+	normal.normalize();
 
+	double t = ((normal * alpha) - (normal * p)) / (normal * d);
+
+	if (t < RAY_EPSILON)
+		return false;
+
+	Vec3d Q = r.at(t);
+
+	if (((beta - alpha)  ^ (Q - alpha)) * normal < 0 ||
+		((gamma - beta)  ^ (Q - beta))  * normal < 0 ||
+		((alpha - gamma) ^ (Q - gamma)) * normal < 0)
+		return false;
+
+	i.obj = this;
+	i.t = t;
+	i.N = normal;
+
+	return true;
 }
 
 
