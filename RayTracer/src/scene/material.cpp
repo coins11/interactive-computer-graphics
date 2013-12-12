@@ -23,7 +23,7 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const {
 
 		Vec3d lc = pLight->getColor(r.at(i.t));	// pLightから出る光の量
 		Vec3d atten;		// 減衰率. 後のためにベクトル型にしておこう
-		atten = pLight->distanceAttenuation(r.at(i.t)) * Vec3d(1.0, 1.0, 1.0);
+		atten = pLight->distanceAttenuation(r.at(i.t)) * pLight->shadowAttenuation(r.at(i.t));
 		Vec3d ldf = kd(i) * ((ld * n) >= 0 ? (ld * n) : 0);
 		/* ldfの値を自分で計算しよう */
 

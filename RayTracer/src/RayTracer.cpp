@@ -61,11 +61,66 @@ Vec3d RayTracer::traceRay( const ray& r,
 		// Instead of just returning the result of shade(), add some
 		// more steps: add in the contributions from reflected and refracted
 		// rays.
+		//
+		const Material& m=i.getMaterial();	// 交差した物体のパラメータ取得用
+		Vec3d ret = m.shade(scene, r, i);	// 返り値の初期値にシェーディングの値を入れる
 
-		const Material& m = i.getMaterial();
+		if ( depth < traceUI->getDepth() ) {	// 再帰深度とスライダーの値を比較
+			Vec3d kr = m.kr(i);				// 反射の係数
+			Vec3d kt = m.kt(i);				// 透過の係数
+			Vec3d d = r.getDirection();
+			d.normalize();
+			Vec3d norm = i.N;
+			double n1, n2;   //屈折率 n1 入射側, n2屈折側
 
-		return m.shade(scene, r, i);
+			if (d * i.N > 0.0) {
+				norm = -norm;                          // 物体内からのRayの場合
+				n1 = m.index(i);				
+				n2  = 1;
+			} else {
+				n1 = 1;
+				n2 = m.index(i);
+			}
+			double nm = n2/n1; 				//全反射条件用
 
+			if (d * i.N > 0.0) {
+				norm = -norm;                          // 物体内からのRayの場合
+			}
+
+			Vec3d reflect(0.0, 0.0, 0.0);            // 光源から反射する鏡面光の値
+			Vec3d dd = -(norm * d) * norm + d;
+			Vec3d rd = -d + 2 * dd;
+
+			rd.normalize();
+			if (!(kr.iszero())) {                         // 反射係数が0かチェック
+				ray rr( r.at(i.t-RAY_EPSILON), rd, ray::REFLECTION );
+				reflect = traceRay(rr, thresh, depth+1);	// 深度を深めて再帰計算
+				ret += prod( kr, reflect );
+			}
+
+			// transmission
+			Vec3d td = -norm + dd/sqrt(nm*nm-dd.length2());  //屈折ベクトル
+			td.normalize();
+
+			Vec3d transmit(0.0, 0.0, 0.0);		// 屈折するRayの返り値
+			/* transmitの値を自分で計算しよう. ついでに全反射の場合の処理もしよう */
+			if(!kt.iszero())
+			{
+				if(dd.length()>nm)  //ddの大きさはsin(Θin)と同じ
+				{
+					//全反射の場合は, 反射ベクトルを使う
+					ray rr( r.at(i.t-RAY_EPSILON), rd, ray::REFLECTION );
+					transmit = traceRay(rr, thresh, depth+1);
+					ret += prod(kt, transmit);
+				} else
+				{
+					ray rr( r.at(i.t+RAY_EPSILON), td, ray::REFRACTION );// 透過の場合
+					transmit = traceRay(rr, thresh, depth+1);
+					ret += prod(kt, transmit);
+				}
+			}
+		}
+		return ret;
 	
 	} else {
 		// No intersection.  This ray travels to infinity, so we color
